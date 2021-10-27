@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+		<title>Jade Delight</title>
+	</head>
+
+	<body>
+		<script language="javascript">
+
+			function MenuItem(name, cost)
+			{
+				this.name = name;
+				this.cost = cost;
+			}
+
+			menuItems = new Array(
+				new MenuItem("Chicken Chop Suey", 4.5),
+				new MenuItem("Sweet and Sour Pork", 6.25),
+				new MenuItem("Shrimp Lo Mein", 5.25),
+				new MenuItem("Moo Shi Chicken", 6.5),
+				new MenuItem("Fried Rice", 2.35)
+			);
+
+			function makeSelect(name, minRange, maxRange)
+			{
+				var t= "";
+				t = "<select name='" + name + "' size='1'>";
+				for (j=minRange; j<=maxRange; j++)
+				   t += "<option>" + j + "</option>";
+				t+= "</select>";
+				return t;
+			}
+
+		</script>
+
+	<h1>Jade Delight</h1>
+
+	<form>
+		<p>First Name: <input type="text"  name='fname' /></p>
+		<p>Last Name*:  <input type="text"  name='lname' /></p>
+		<p id="street_ID">Street: <input type="text"  name='street'/></p>
+		<p id="city_id">City: <input type="text"  name='city'/></p>
+		<p>Phone*: <input type="text"  name='phone' /></p>
+		<p>
+			<input type="radio"  name="p_or_d" value = "pickup" checked="checked"/>Pickup
+			<input type="radio"  name='p_or_d' value = "delivery"/>
+			Delivery
+		</p>
+
+		<!-- this jQuery fucntion helps to hide the street and city id values if an order is for pickup -->
+		<script language="javascript">
+
+
+			// // Add US Phone Validation
+			// jQuery.validator.addMethod('phoneUS', function(phone_number, element)
+			// {
+			// 	phone_number = phone_number.replace(/\s+/g, '');
+	    	// 	return this.optional(element) || phone_number.length > 9 && phone_number.match(/^(1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+			// }, 'Please enter a valid phone number.');
+
+			// $(document).ready(
+			// 	function(){
+
+					// //default - start off with the values for street and city hidden
+					// $("#street_ID").hide();
+					// $("#city_id").hide();
+					//
+					// $("input[name= 'street']").hide();
+					// $("input[name= 'city']").hide();
+					//
+					// //case 1: you've clicked delivery, but actually wanted pick up
+					// //if pickup has been clicked, hide the street and city values
+					// $("input[value = pickup]").click(function()
+					// {
+					// 	$("#street_ID").hide();
+					// 	$("#city_id").hide();
+					//
+					// 	$("input[name= 'street']").hide();
+					// 	$("input[name= 'city']").hide();
+					// })
+					//
+					// //case 2: you've clicked delivery and need the street and city boxes
+					// //if delivery has been clicked, show the street and city values
+					// $("input[value = delivery]").click(function()
+					// {
+					// 	$("#street_ID").show();
+					// 	$("#city_id").show();
+					//
+					// 	$("input[name= 'street']").show();
+					// 	$("input[name= 'city']").show();
+					//
+					// 	$("input[name= 'street']").attr("required", true);
+					// 	$("input[name= 'city']").attr("required", true);
+					//
+					// })
+					//
+					// //validate all things are properly inputted in form - if not, throw error.
+					// $("form").validate({ // initialize the plugin
+					// 	rules: {
+					// 		lname:{
+					// 			required: true
+					// 		}
+					// 		phone:{
+					// 			required: true,
+					// 			phoneUS: true
+					// 		}
+					// 	}
+					//
+					// 	messages: {
+					// 		lname: "You must enter a last name.";
+					// 	}
+					//
+					// 	submitHandler: function (form) {
+					// 		alert('A valid form has been submitted');
+					// 		return false;
+					// 	}
+					// })
+
+				// }
+
+
+
+			)
+		</script>
+
+		<table border="0" cellpadding="3">
+
+		  <tr>
+		    <th>Select Item</th>
+		    <th>Item Name</th>
+		    <th>Cost Each</th>
+		    <th>Total Cost</th>
+		  </tr>
+
+			<script language="javascript">
+
+			  var s = "";
+			  for (i=0; i< menuItems.length; i++)
+			  {
+				  s += "<tr><td>";
+				  s += makeSelect("quan" + i, 0, 10);
+				  s += "</td><td>" + menuItems[i].name + "</td>";
+				  s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
+				  s += "<td>$<input type='text' name='cost'/></td></tr>";
+			  }
+			  document.writeln(s);
+			</script>
+
+			<!-- My code starts here -->
+			<script language="javascript">
+
+
+				//validate lname is properly inputted into textField
+				function validLName()
+				{
+					var lname = document.getElementsByName('lname')[0];
+
+					if (lname.value = "") {
+						alert("Please complete the required field for a last name.");
+						return false;
+					}
+					return true;
+				}
+
+				//validate that a proper phone number has been inputted into the textField
+				function validPhone()
+				{
+					var phoneNum = document.getElementsByName('phone')[0];
+					var validPhoneNum = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+
+					if (phoneNum.value = "") {
+						alert("Please complete the required field for a phone number.");
+						return false;
+					}
+					else if( !(phoneNum.value.match(validPhoneNum)) || phoneNum.length > 9)
+					{
+						alert("Please enter a valid US Phone Number in the 123-456-7890 format. ")
+						return false;
+					}
+					else if( phoneNum.value.match(validPhoneNum) && phoneNum.length == 9)
+					{
+						alert("Please enter a valud ");
+						return false;
+					}
+				}
+
+				//1. When a user selects quantity
+				//Quantities of food dropdown memnu, empty array intialized to store these values in.
+				var chopSuey,
+					sweetSour,
+					loMein,
+					mooShi,
+					friedRice;
+
+				//var sweetSour = document.getElementsByName("item2");
+				var subtotal;
+
+				//Stores the values for the selected quantity items above
+				var subtotal0,
+					subtotal1,
+					subtotal2,
+					subtotal3,
+					subtotal4;
+				totalArray = [];
+
+				var massTax = 0.0625;
+				var withTax = 1.0625;
+
+				//event listener - onLoad!
+				$(document).ready(function()
+				{
+
+					//default - start off with the values for street and city hidden
+					$("#street_ID").hide();
+					$("#city_id").hide();
+
+					$("input[name= 'street']").hide();
+					$("input[name= 'city']").hide();
+
+					//case 1: you've clicked delivery, but actually wanted pick up
+					//if pickup has been clicked, hide the street and city values
+					$("input[value = pickup]").click(function()
+					{
+						$("#street_ID").hide();
+						$("#city_id").hide();
+
+						$("input[name= 'street']").hide();
+						$("input[name= 'city']").hide();
+					})
+
+					//case 2: you've clicked delivery and need the street and city boxes
+					//if delivery has been clicked, show the street and city values
+					$("input[value = delivery]").click(function()
+					{
+						$("#street_ID").show();
+						$("#city_id").show();
+
+						$("input[name= 'street']").show();
+						$("input[name= 'city']").show();
+
+						$("input[name= 'street']").attr("required", true);
+						$("input[name= 'city']").attr("required", true);
+
+					})
+
+					//default values start at 0, updated below.
+					updateForm(0);
+					updateForm(1);
+					updateForm(2);
+					updateForm(3);
+					updateForm(4);
+
+					$('select[name="quan0"]').change(function() {
+						updateForm(0);
+					});
+					$('select[name="quan1"]').change(function() {
+						updateForm(1);
+					});
+					$('select[name="quan2"]').change(function() {
+						updateForm(2);
+					});
+					$('select[name="quan3"]').change(function() {
+						updateForm(3);
+					});
+					$('select[name="quan4"]').change(function() {
+						updateForm(4);
+					});
+				})
+
+				//this holds the number of items selected
+				function updateForm(i)
+				{
+						chopSuey = document.forms[0].quan0.selectedIndex;
+						// subtotal0 = chopSuey * menuItems[0].cost;
+
+						sweetSour = document.forms[0].quan1.selectedIndex;
+						// subtotal1 = sweetSour * menuItems[1].cost;
+
+						loMein = document.forms[0].quan2.selectedIndex;
+						// subtotal2 = loMein * menuItems[2].cost;
+
+
+						mooShi = document.forms[0].quan3.selectedIndex;
+						// subtotal3 = mooShi * menuItems[3].cost;
+
+
+						friedRice = document.forms[0].quan4.selectedIndex;
+						// subtotal4 = friedRice * menuItems[4].cost;
+
+						subtotal0 = chopSuey * menuItems[0].cost;
+						subtotal1 = sweetSour * menuItems[1].cost;
+						subtotal2 = loMein * menuItems[2].cost;
+						subtotal3 = mooShi * menuItems[3].cost;
+						subtotal4 = friedRice * menuItems[4].cost;
+
+						totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
+
+						document.forms[0].cost[i].value = totalArray[i].toFixed(2);
+
+						updateTotal();
+				}
+
+				function updateTotal()
+				{
+					// var totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
+					// document.forms[0],cost[i].value = totalArray[i].toFixed(2);
+					// subtotal = subtotal0 + subtotal1 + subtotal2 + subtotal3 + subtotal4;
+
+					subtotal = subtotal0 + subtotal1 + subtotal2 + subtotal3 + subtotal4;
+
+					document.forms[0].subtotal.value = subtotal.toFixed(2);
+					document.forms[0].tax.value = (subtotal * massTax).toFixed(2);
+					document.forms[0].total.value = (subtotal * withTax).toFixed(2);
+				}
+
+				// function updateValues(i, index)
+				// {
+				// 	if (i=0) {
+				// 		subtotal0 = index * menuItems[0].cost;
+				// 	}
+				// 	else if (i=1) {
+				// 		subtotal1 = index * menuItems[1].cost;
+				// 	}
+				// 	else if (i=2) {
+				// 		subtotal2 = index * menuItems[2].cost;
+				// 	}
+				// 	else if (i=3) {
+				// 		subtotal3 = index * menuItems[3].cost;
+				// 	}
+				// 	else if (i=4) {
+				// 		subtotal4 = index * menuItems[4].cost;
+				// 	}
+				//
+				// 	var totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
+				// 	document.forms[0],cost[i].value = totalArray[i].toFixed(2);
+				// 	subtotal = subtotal0 + subtotal1 + subtotal2 + subtotal3 + subtotal4;
+				//
+				// 	document.forms[0].subtotal.value = subtotal.toFixed(2);
+				// 	document.forms[0].tax.value = (subtotal * massTax).toFixed(2);
+				// 	document.forms[0].total.value = (subtotal * withTax).toFixed(2);
+				// }
+
+				function run()
+				{
+					var bool = false;
+
+					if (true) {
+
+					}
+				}
+
+
+			</script>
+		</table>
+
+		<p>Subtotal:
+		   $<input type="text"  name='subtotal' id="subtotal" />
+		</p>
+
+		<p>Mass tax 6.25%:
+		  $ <input type="text"  name='tax' id="tax" />
+		</p>
+
+		<p>Total: $ <input type="text"  name='total' id="total" />
+		</p>
+
+		<input type = "button" value = "Submit Order" />
+
+	</form>
+	</body>
+</html>
