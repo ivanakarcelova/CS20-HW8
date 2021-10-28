@@ -4,6 +4,10 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="style.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Cantarell&display=swap" rel="stylesheet">
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
 		<title>Jade Delight</title>
@@ -40,7 +44,7 @@
 
 	<h1>Jade Delight</h1>
 
-	<form>
+	<form onsubmit="return run()">
 		<p>First Name: <input type="text"  name='fname' /></p>
 		<p>Last Name*:  <input type="text"  name='lname' /></p>
 		<p id="street_ID">Street: <input type="text"  name='street'/></p>
@@ -51,82 +55,6 @@
 			<input type="radio"  name='p_or_d' value = "delivery"/>
 			Delivery
 		</p>
-
-		<!-- this jQuery fucntion helps to hide the street and city id values if an order is for pickup -->
-		<script language="javascript">
-
-
-			// // Add US Phone Validation
-			// jQuery.validator.addMethod('phoneUS', function(phone_number, element)
-			// {
-			// 	phone_number = phone_number.replace(/\s+/g, '');
-	    	// 	return this.optional(element) || phone_number.length > 9 && phone_number.match(/^(1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
-			// }, 'Please enter a valid phone number.');
-
-			// $(document).ready(
-			// 	function(){
-
-					// //default - start off with the values for street and city hidden
-					// $("#street_ID").hide();
-					// $("#city_id").hide();
-					//
-					// $("input[name= 'street']").hide();
-					// $("input[name= 'city']").hide();
-					//
-					// //case 1: you've clicked delivery, but actually wanted pick up
-					// //if pickup has been clicked, hide the street and city values
-					// $("input[value = pickup]").click(function()
-					// {
-					// 	$("#street_ID").hide();
-					// 	$("#city_id").hide();
-					//
-					// 	$("input[name= 'street']").hide();
-					// 	$("input[name= 'city']").hide();
-					// })
-					//
-					// //case 2: you've clicked delivery and need the street and city boxes
-					// //if delivery has been clicked, show the street and city values
-					// $("input[value = delivery]").click(function()
-					// {
-					// 	$("#street_ID").show();
-					// 	$("#city_id").show();
-					//
-					// 	$("input[name= 'street']").show();
-					// 	$("input[name= 'city']").show();
-					//
-					// 	$("input[name= 'street']").attr("required", true);
-					// 	$("input[name= 'city']").attr("required", true);
-					//
-					// })
-					//
-					// //validate all things are properly inputted in form - if not, throw error.
-					// $("form").validate({ // initialize the plugin
-					// 	rules: {
-					// 		lname:{
-					// 			required: true
-					// 		}
-					// 		phone:{
-					// 			required: true,
-					// 			phoneUS: true
-					// 		}
-					// 	}
-					//
-					// 	messages: {
-					// 		lname: "You must enter a last name.";
-					// 	}
-					//
-					// 	submitHandler: function (form) {
-					// 		alert('A valid form has been submitted');
-					// 		return false;
-					// 	}
-					// })
-
-				// }
-
-
-
-			)
-		</script>
 
 		<table border="0" cellpadding="3">
 
@@ -154,41 +82,6 @@
 			<!-- My code starts here -->
 			<script language="javascript">
 
-
-				//validate lname is properly inputted into textField
-				function validLName()
-				{
-					var lname = document.getElementsByName('lname')[0];
-
-					if (lname.value = "") {
-						alert("Please complete the required field for a last name.");
-						return false;
-					}
-					return true;
-				}
-
-				//validate that a proper phone number has been inputted into the textField
-				function validPhone()
-				{
-					var phoneNum = document.getElementsByName('phone')[0];
-					var validPhoneNum = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-
-					if (phoneNum.value = "") {
-						alert("Please complete the required field for a phone number.");
-						return false;
-					}
-					else if( !(phoneNum.value.match(validPhoneNum)) || phoneNum.length > 9)
-					{
-						alert("Please enter a valid US Phone Number in the 123-456-7890 format. ")
-						return false;
-					}
-					else if( phoneNum.value.match(validPhoneNum) && phoneNum.length == 9)
-					{
-						alert("Please enter a valud ");
-						return false;
-					}
-				}
-
 				//1. When a user selects quantity
 				//Quantities of food dropdown memnu, empty array intialized to store these values in.
 				var chopSuey,
@@ -197,17 +90,16 @@
 					mooShi,
 					friedRice;
 
-				//var sweetSour = document.getElementsByName("item2");
-				var subtotal;
-
 				//Stores the values for the selected quantity items above
-				var subtotal0,
+				var subtotal,
+					subtotal0,
 					subtotal1,
 					subtotal2,
 					subtotal3,
 					subtotal4;
 				totalArray = [];
 
+				//standard tax values
 				var massTax = 0.0625;
 				var withTax = 1.0625;
 
@@ -275,42 +167,30 @@
 				//this holds the number of items selected
 				function updateForm(i)
 				{
-						chopSuey = document.forms[0].quan0.selectedIndex;
-						// subtotal0 = chopSuey * menuItems[0].cost;
+					//grab the selected index of each
+					chopSuey = document.forms[0].quan0.selectedIndex;
+					sweetSour = document.forms[0].quan1.selectedIndex;
+					loMein = document.forms[0].quan2.selectedIndex;
+					mooShi = document.forms[0].quan3.selectedIndex;
+					friedRice = document.forms[0].quan4.selectedIndex;
 
-						sweetSour = document.forms[0].quan1.selectedIndex;
-						// subtotal1 = sweetSour * menuItems[1].cost;
+					//grab the cost of each of these menu items and multiply by quantity
+					subtotal0 = chopSuey * menuItems[0].cost;
+					subtotal1 = sweetSour * menuItems[1].cost;
+					subtotal2 = loMein * menuItems[2].cost;
+					subtotal3 = mooShi * menuItems[3].cost;
+					subtotal4 = friedRice * menuItems[4].cost;
 
-						loMein = document.forms[0].quan2.selectedIndex;
-						// subtotal2 = loMein * menuItems[2].cost;
+					//return the totalArray of menu items
+					totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
+					document.forms[0].cost[i].value = totalArray[i].toFixed(2);
 
-
-						mooShi = document.forms[0].quan3.selectedIndex;
-						// subtotal3 = mooShi * menuItems[3].cost;
-
-
-						friedRice = document.forms[0].quan4.selectedIndex;
-						// subtotal4 = friedRice * menuItems[4].cost;
-
-						subtotal0 = chopSuey * menuItems[0].cost;
-						subtotal1 = sweetSour * menuItems[1].cost;
-						subtotal2 = loMein * menuItems[2].cost;
-						subtotal3 = mooShi * menuItems[3].cost;
-						subtotal4 = friedRice * menuItems[4].cost;
-
-						totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
-
-						document.forms[0].cost[i].value = totalArray[i].toFixed(2);
-
-						updateTotal();
+					//update the totals of the items based on the tax.
+					updateTotal();
 				}
 
 				function updateTotal()
 				{
-					// var totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
-					// document.forms[0],cost[i].value = totalArray[i].toFixed(2);
-					// subtotal = subtotal0 + subtotal1 + subtotal2 + subtotal3 + subtotal4;
-
 					subtotal = subtotal0 + subtotal1 + subtotal2 + subtotal3 + subtotal4;
 
 					document.forms[0].subtotal.value = subtotal.toFixed(2);
@@ -318,42 +198,108 @@
 					document.forms[0].total.value = (subtotal * withTax).toFixed(2);
 				}
 
-				// function updateValues(i, index)
-				// {
-				// 	if (i=0) {
-				// 		subtotal0 = index * menuItems[0].cost;
-				// 	}
-				// 	else if (i=1) {
-				// 		subtotal1 = index * menuItems[1].cost;
-				// 	}
-				// 	else if (i=2) {
-				// 		subtotal2 = index * menuItems[2].cost;
-				// 	}
-				// 	else if (i=3) {
-				// 		subtotal3 = index * menuItems[3].cost;
-				// 	}
-				// 	else if (i=4) {
-				// 		subtotal4 = index * menuItems[4].cost;
-				// 	}
-				//
-				// 	var totalArray = [subtotal0, subtotal1, subtotal2, subtotal3, subtotal4];
-				// 	document.forms[0],cost[i].value = totalArray[i].toFixed(2);
-				// 	subtotal = subtotal0 + subtotal1 + subtotal2 + subtotal3 + subtotal4;
-				//
-				// 	document.forms[0].subtotal.value = subtotal.toFixed(2);
-				// 	document.forms[0].tax.value = (subtotal * massTax).toFixed(2);
-				// 	document.forms[0].total.value = (subtotal * withTax).toFixed(2);
-				// }
-
-				function run()
+				//validate lname is properly inputted into textField
+				function validLName()
 				{
-					var bool = false;
-
-					if (true) {
-
+					var lname = document.forms[0].lname.value;
+					if (!(lname.length > 1)) {
+						return false;
 					}
+					return true;
 				}
 
+				//validate that a proper phone number has been inputted into the textField
+				function validPhoneNum()
+				{
+					//has to be a set of ten digits
+					var phoneNum = document.forms[0].phone.value;
+					var validPhoneNum = /^\d{10}$/;
+
+					if( !(phoneNum.match(validPhoneNum)))
+					{
+						return false;
+					}
+
+					return true;
+				}
+
+				//get the propert time for the ETA
+				function readyTime(min)
+				{
+					today = new Date();
+					return today.setMinutes(today.getMinutes() + min);
+				}
+
+
+				function orderWindow(waitTime){
+					var win_lname = document.forms[0].lname.value;
+					var win_subtotal = document.forms[0].subtotal.value;
+					var win_tax = document.forms[0].tax.value;
+					var win_total = document.forms[0].total.value;
+
+					// create the new window
+					var orderWindow = window.open("Jade Delight", "", "");
+
+					//write what would have been an alert to the new window.
+					orderWindow.document.write("<p>Thank you, Mx. " + win_lname + ". <br><br>Your order has been placed!<br>" +
+					 	"Subtotal: $" + win_subtotal +
+						"<br><br>Tax: $" + win_tax +
+						"<br><br>Total: $" + win_total +
+						"<br><br>You ordered... <br>" +
+							chopSuey + " Chicken Chop Suey ..... $" + subtotal0 + "<br>" +
+							sweetSour + " Sweet & Sour Pork ..... $" + subtotal1 + "<br>" +
+							loMein + " Shrimp Lo Mein ..... $" + subtotal2 + "<br>" +
+							mooShi + " Moo Shi Chicken ..... $" + subtotal3 + "<br>" +
+							friedRice + " Fried Rice ..... $" + subtotal4 + "</p>");
+					orderWindow.document.close(); //close the window
+
+				}
+
+				//run function to run the order through...
+				function run()
+				{
+					var time, order, waitTime;
+					var orderFormat = document.forms[0].p_or_d.value;
+					var streetName = document.forms[0].street.value;
+					var cityName = document.forms[0].city.value;
+
+					if (!validLName()) {
+						alert("Please complete the required field for a last name.");
+						return false;
+					}
+
+					else if (!validPhoneNum()) {
+						alert("Please enter a valid US Phone Number in the 123-456-7890 format. ");
+						return false;
+					}
+
+					//calculate time validity
+					if (orderFormat == "pickup") {
+						//default is pickup...
+						order = "Pickup";
+						time = 15;
+						waitTime = readyTime(time);
+					}
+					else {
+						order = "Delivery";
+						time = 30;
+						waitTime = readyTime(time);
+
+						//check to see if it has a valid address
+						if (!(streetName.length > 1)) {
+							alert("Please enter a valid street name for your order.");
+							return false;
+						}
+						if (!(city.length > 1)) {
+							alert("Please enter a valid city name for your order.");
+							return false;
+						}
+					}
+
+					orderWindow(waitTime);
+					// console.log("Valid input");
+					return true;
+				}
 
 			</script>
 		</table>
@@ -369,7 +315,7 @@
 		<p>Total: $ <input type="text"  name='total' id="total" />
 		</p>
 
-		<input type = "button" value = "Submit Order" />
+		<input type = "submit" value = "Submit Order" />
 
 	</form>
 	</body>
